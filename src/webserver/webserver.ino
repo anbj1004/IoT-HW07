@@ -3,11 +3,11 @@ hw7 webserver
 
 #include <WiFi.h>
 
-// ✅ Wi-Fi 설정
+// Wi-Fi setting
 const char* ssid = "AndroidHotspotEB_4A_03";
 const char* password = "11113111";
 
-// UART 설정
+// UART setting
 #define RXD2 16   // BLE Client TX 연결
 #define TXD2 17   // 사용 안함
 
@@ -16,10 +16,10 @@ WiFiServer server(80);
 String header;
 
 void setup() {
-  Serial.begin(115200);       // Web ESP32 자체 디버그용
-  Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2); // BLE Client로부터 수신
+  Serial.begin(115200);       // for Web ESP32 debug
+  Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2); // receive from BLE Client
 
-  // Wi-Fi 연결
+  // Wi-Fi connection
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500); Serial.print(".");
@@ -30,7 +30,7 @@ void setup() {
 }
 
 void loop() {
-  // 🟢 BLE Client로부터 거리값 수신
+  // receive distance from BLE Client
   if (Serial2.available()) {
     String raw = Serial2.readStringUntil('\n');
     raw.trim();
@@ -42,7 +42,7 @@ void loop() {
     }
   }
 
-  // 🌐 웹서버 동작
+  // web server implementation
   WiFiClient client = server.available();
   if (client) {
     client.println("HTTP/1.1 200 OK");
